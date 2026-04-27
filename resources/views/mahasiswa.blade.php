@@ -15,6 +15,9 @@
          <h1 class="text-center">Mahasiswa List</h1>
          <div class="table-responsive mt-5">
             <a href="{{ url('/mahasiswa/add') }}" class="btn btn-primary mb-3">Add new</a>
+            @if (Session::has('message'))
+               <p class="alert alert-success">{{ Session::get('message') }}</p>
+            @endif
             <form method="GET">
                <div class="input-group mb-3">
                   <input type="text" name="title" value="{{ request('title') }}" class="form-control"
@@ -48,8 +51,9 @@
                         <td>{{ $mhs->angkatan }}</td>
                         <td>
                            <a href="{{ url('/mahasiswa/' . $mhs->id . '/detail') }}" class="btn btn-sm btn-info">view</a>
-                           <a href="#" class="btn btn-sm btn-warning">edit</a>
-                           <a href="#" class="btn btn-sm btn-danger">delete</a>
+                           <a href="{{ url('/mahasiswa/' . $mhs->id . '/edit') }}" class="btn btn-sm btn-warning">edit</a>
+                           <a href="{{ url('/mahasiswa/' . $mhs->id . '/delete') }}"
+                              class="btn btn-sm btn-danger">delete</a>
 
                         </td>
                      </tr>

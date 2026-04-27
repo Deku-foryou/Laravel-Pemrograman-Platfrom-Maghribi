@@ -52,4 +52,34 @@ class DosenController extends Controller
         $dsn = DB::table('dosens')->where('id', '=', $id)->first();
         return view('dosen-detail', ['dsn' => $dsn]);
     }
+    function edit($id) {
+        $dsn = DB::table('dosens')->where('id', $id)->first();
+        if (!$dsn) abort(404);
+        return view('dosen-edit', ['dsn' => $dsn]);
+    }
+
+    function update(Request $request, $id)
+    {
+        $request->validate([
+            'nidn' => 'required|unique:dosens,nidn,' . $id . '|max:255',
+            'nama' => 'required',
+            'email' => 'required|email',
+        ]);
+        
+        DB::table('dosens')->where('id', $id)->update([
+            'nidn' => $request->nidn,
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'updated_at' => now()
+        ]);
+        
+        Session::flash('message', 'Data Dosen Succesfully Updated!');
+        return redirect()->route('dosen');
+    }
+
+    function delete($id) {
+        DB::table('dosens')->where('id', $id)->delete();
+        Session::flash('message', 'Data Dosen Berhasil Dihapus!');
+        return redirect()->route('dosen');
+    }
 }

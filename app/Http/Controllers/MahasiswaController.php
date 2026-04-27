@@ -57,4 +57,37 @@ class MahasiswaController extends Controller
 
         return view('mahasiswa-detail', ['mhs' => $mhs]);
     }
+    function edit($id) {
+        $mhs = DB::table('mahasiswas')->where('id', $id)->first();
+        if (!$mhs) abort(404);
+        return view('mahasiswa-edit', ['mhs' => $mhs]);
+    }
+function update(Request $request, $id)
+    {
+        $request->validate([
+            'nim' => 'required|unique:mahasiswas,nim,' . $id . '|max:255',
+            'nama' => 'required',
+            'email' => 'required|email',
+            'jurusan' => 'required',
+            'angkatan' => 'required',
+        ]);
+        
+        DB::table('mahasiswas')->where('id', $id)->update([
+            'nim' => $request->nim,
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'jurusan' => $request->jurusan,
+            'angkatan' => $request->angkatan,
+            'updated_at' => now()
+        ]);
+        
+        Session::flash('message', 'Data Mahasiswa Succesfully Updated!');
+        return redirect()->route('mahasiswa');
+    }
+
+    function delete($id) {
+        DB::table('mahasiswas')->where('id', $id)->delete();
+        Session::flash('message', 'Data Mahasiswa Berhasil Dihapus!');
+        return redirect()->route('mahasiswa');
+    }
 }
