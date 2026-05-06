@@ -9,4 +9,8 @@ class Karyawan extends Model
 {
     /** @use HasFactory<\Database\Factories\KaryawanFactory> */
     use HasFactory;
+
+    protected $guarded = [
+        'id'
+    ];
 }

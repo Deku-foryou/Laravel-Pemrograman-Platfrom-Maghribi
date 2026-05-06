@@ -26,7 +26,7 @@
                 </form>
 
                 <table class="table table-striped table-hover">
-                    <thead>
+                    <thead class="">
                         <tr>
                             <th>No</th>
                             <th>NIDN</th>

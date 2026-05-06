@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -11,8 +12,9 @@ class BlogController extends Controller
     function index(Request $request)
     {
         $title = $request->title;
-        $blogs = DB::table('blogs')->where('title', 'LIKE', '%' . $title . '%')->orderBy('id', 'desc')->paginate(10);
+        $blogs = Blog::where('title', 'LIKE', '%' . $title . '%')->orderBy('id', 'desc')->paginate(10);
         return view('blog', ['blogs' => $blogs, 'title' => $title]);
+
     }
     function add()
     {
@@ -25,11 +27,7 @@ class BlogController extends Controller
             'title' => 'required|unique:blogs|max:255',
             'description' => 'required',
         ]);
-        DB::table('blogs')->insert([
-            'title' => $request->title,
-            'description' => $request->description
-        ]);
-
+        Blog::create($request->all());
         Session::flash('message', 'New Blog Succesfully Added!');
 
         return redirect()->route('blog');
@@ -37,19 +35,13 @@ class BlogController extends Controller
 
     function show($id)
     {
-        $blog = DB::table('blogs')->where('id', $id)->first();
-        if (!$blog) {
-            abort(404);
-        }
+        $blog = Blog::findOrFail($id);
         return view('blog-detail', ['blog' => $blog]);
     }
 
     function edit($id)
     {
-        $blog = DB::table('blogs')->where('id', $id)->first();
-        if (!$blog) {
-            abort(404);
-        }
+        $blog = Blog::findOrFail($id);
         return view('blog-edit', ['blog' => $blog]);
     }
 
@@ -59,17 +51,18 @@ class BlogController extends Controller
             'title' => 'required|unique:blogs,title, ' . $id . '|max:255',
             'description' => 'required',
         ]);
-        DB::table('blogs')->where('id', $id)->update([
-            'title' => $request->title,
-            'description' => $request->description
-        ]);
-         Session::flash('message', ' Blog Succesfully Updated!');
-         return redirect()-> route('blog');
+        $blog = Blog::findOrFail($id);
+        $blog->update($request->all());
+        Session::flash('message', ' Blog Succesfully Updated!');
+        return redirect()->route('blog');
     }
 
-    function delete($id){
-        $blog = DB::table('blogs') -> where('id', $id)->delete();
-          Session::flash('message', ' Blog Succesfully DELETED!');
-         return redirect()-> route('blog');
+    function delete($id)
+    {
+        // $blog = DB::table('blogs')->where('id', $id)->delete();
+        $blogs = blog::findOrFail($id);
+        $blogs->delete();
+        Session()->flash('message', $blogs->title . ' Blog Succesfully DELETED!');
+        return redirect('/blog');
     }
 }

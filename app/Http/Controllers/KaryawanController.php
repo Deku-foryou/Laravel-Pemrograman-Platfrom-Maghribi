@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Karyawan; // Import Model
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class KaryawanController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->search; // Menggunakan name="search" dari form 
-        
-        $karyawan = DB::table('karyawans')
-            ->where('nama', 'LIKE', '%' . $search . '%')
+        $search = $request->search;
+
+        $karyawan = Karyawan::where('nama', 'LIKE', '%' . $search . '%')
             ->orWhere('nik', 'LIKE', '%' . $search . '%')
             ->orderBy('id', 'desc')
             ->paginate(10);
@@ -35,32 +34,25 @@ class KaryawanController extends Controller
             'jabatan' => 'required',
         ]);
 
-        DB::table('karyawans')->insert([
-            'nik' => $request->nik,
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'jabatan' => $request->jabatan,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
+        Karyawan::create($request->all());
 
         Session::flash('message', 'Data Karyawan Berhasil Ditambahkan!');
-
         return redirect()->route('karyawan');
     }
 
     public function show($id)
     {
-        $krw = DB::table('karyawans')->where('id', '=', $id)->first();
+        $krw = Karyawan::findOrFail($id);
         return view('karyawan-detail', ['krw' => $krw]);
     }
-    function edit($id) {
-        $krw = DB::table('karyawans')->where('id', $id)->first();
-        if (!$krw) abort(404);
+
+    public function edit($id)
+    {
+        $krw = Karyawan::findOrFail($id);
         return view('karyawan-edit', ['krw' => $krw]);
     }
 
-   function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'nik' => 'required|unique:karyawans,nik,' . $id . '|max:255',
@@ -68,22 +60,21 @@ class KaryawanController extends Controller
             'email' => 'required|email',
             'jabatan' => 'required',
         ]);
-        
-        DB::table('karyawans')->where('id', $id)->update([
-            'nik' => $request->nik,
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'jabatan' => $request->jabatan,
-            'updated_at' => now()
-        ]);
-        
-        Session::flash('message', 'Data Karyawan Succesfully Updated!');
+
+        $karyawan = Karyawan::findOrFail($id);
+        $karyawan->update($request->all());
+
+        Session::flash('message', 'Data Karyawan Successfully Updated!');
         return redirect()->route('karyawan');
     }
 
-    function delete($id) {
-        DB::table('karyawans')->where('id', $id)->delete();
-        Session::flash('message', 'Data Karyawan Berhasil Dihapus!');
+    public function delete($id)
+    {
+        $krw = Karyawan::findOrFail($id);
+        $krw->delete();
+
+
+        Session::flash('message', 'Karyawan ' . $krw->nama . ' Succesfully DELETED!');
         return redirect()->route('karyawan');
     }
 }
