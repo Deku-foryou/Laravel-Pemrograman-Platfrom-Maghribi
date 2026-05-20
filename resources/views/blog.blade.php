@@ -27,7 +27,7 @@
 
             </form>
             <table class="table table-striped table-hover">
-               <thead>
+               <thead class="table-dark">
                   <th>No</th>
                   <th>Title</th>
                   <th>Action</th>

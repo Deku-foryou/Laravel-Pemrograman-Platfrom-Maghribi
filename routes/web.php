@@ -4,6 +4,8 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\UserController;
+use App\Models\Phone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,3 +49,11 @@ Route::get('/dosen/{id}/detail', [DosenController::class, 'show']);
 Route::get('/dosen/{id}/edit', [DosenController::class, 'edit']);
 Route::patch('/dosen/{id}/update', [DosenController::class, 'update']);
 Route::get('/dosen/{id}/delete', [DosenController::class, 'delete']);
+
+//users route
+Route::get('/users', [UserController::class, 'index']);
+
+Route::get('/phone', function () {
+    $phones = Phone::with('user')->get();
+    return $phones;
+});

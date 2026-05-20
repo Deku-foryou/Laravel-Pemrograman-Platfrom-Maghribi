@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karyawan List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -13,20 +14,28 @@
         <div class="mt-5">
             <h1 class="text-center">Karyawan List</h1>
             <div class="table-responsive mt-5">
-                <a href="{{ url('/karyawan/add') }}" class="btn btn-primary mb-3">Add new</a>
+                <a href="{{ url('/karyawan/add') }}" class="btn btn-primary mb-3">Add new <i
+                        class="bi bi-plus-circle-fill"></i></a>
                 @if (Session::has('message'))
-               <p class="alert alert-success">{{ Session::get('message') }}</p>
-            @endif
-                <form method="GET">
+                    <p class="alert alert-success">{{ Session::get('message') }}</p>
+                @endif
+                <form action="{{ url()->current() }}" method="GET">
                     <div class="input-group mb-3">
+                        <span class="input-group-text bg-white">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+
                         <input type="text" name="search" value="{{ request('search') }}" class="form-control"
-                            placeholder="Cari Nama karyawan">
-                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                            placeholder="Cari nama karyawan..." autocomplete="off">
+
+                        <button class="btn btn-primary" type="submit">
+                            Search
+                        </button>
                     </div>
                 </form>
 
                 <table class="table table-striped table-hover">
-                    <thead>
+                    <thead class="table-dark">
                         <tr>
                             <th>No</th>
                             <th>NIk</th>

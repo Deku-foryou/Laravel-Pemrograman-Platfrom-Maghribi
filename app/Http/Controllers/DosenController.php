@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dosen; // Import Model Dosen
+use App\Models\Dosen; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
