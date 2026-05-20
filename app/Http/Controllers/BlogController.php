@@ -35,7 +35,7 @@ class BlogController extends Controller
 
     function show($id)
     {
-        $blog = Blog::findOrFail($id);
+        $blog = Blog::with('comments')->findOrFail($id);
         return view('blog-detail', ['blog' => $blog]);
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\MahasiswaController;
@@ -18,7 +19,7 @@ Route::get('/', function () {
 Route::get('/blog', [BlogController::class, 'index']) -> name('blog');
 Route::get('/blog/add', [BlogController::class, 'add']);
 Route::post('/blog/create', [BlogController::class, 'create']);
-Route::get('/blog/{id}/detail', [BlogController::class, 'show']);
+Route::get('/blog/{id}/detail', [BlogController::class, 'show']) ->name ('blog-detail');
 Route::get('/blog/{id}/edit', [BlogController::class, 'edit']);
 Route::patch('/blog/{id}/update', [BlogController::class, 'update']);
 Route::get('/blog/{id}/delete', [BlogController::class, 'delete']);
@@ -53,7 +54,11 @@ Route::get('/dosen/{id}/delete', [DosenController::class, 'delete']);
 //users route
 Route::get('/users', [UserController::class, 'index']);
 
+//phone route
 Route::get('/phone', function () {
     $phones = Phone::with('user')->get();
     return $phones;
 });
+
+//comment route
+Route::post('/comment/{blog_id}', [CommentController::class, 'store']);
