@@ -6,24 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+   public function up(): void
     {
-        Schema::table('blogs', function(Blueprint $table){
-            $table->softDeletes();
+        
+        Schema::create('blogs', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->text('description');
+            $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('blogs', function (Blueprint
-         $table){
-            $table->dropSoftDeletes();
-         });
+        Schema::dropIfExists('blogs');
     }
 };

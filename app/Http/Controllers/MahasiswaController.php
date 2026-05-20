@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mahasiswa; // Import Model
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -12,11 +12,14 @@ class MahasiswaController extends Controller
     {
         $title = $request->title;
 
-        $mahasiswa = Mahasiswa::where('nama', 'LIKE', '%' . $title . '%')
+       
+        $mahasiswas = Mahasiswa::with('dosen_pembimbing')
+            ->where('nama', 'LIKE', '%' . $title . '%')
             ->orderBy('id', 'desc')
             ->paginate(10);
 
-        return view('mahasiswa', ['mahasiswa' => $mahasiswa, 'title' => $title]);
+    
+        return view('mahasiswa', ['mahasiswas' => $mahasiswas, 'title' => $title]);
     }
 
     public function add()
@@ -42,7 +45,8 @@ class MahasiswaController extends Controller
 
     public function show($id)
     {
-        $mhs = Mahasiswa::findOrFail($id);
+        
+        $mhs = Mahasiswa::with(['dosen_pembimbing', 'mata_kuliahs'])->findOrFail($id);
         return view('mahasiswa-detail', ['mhs' => $mhs]);
     }
 
@@ -70,11 +74,11 @@ class MahasiswaController extends Controller
     }
 
    public function delete($id)
-{
-    $mhs = Mahasiswa::findOrFail($id);
-    $mhs->delete();
+   {
+        $mhs = Mahasiswa::findOrFail($id);
+        $mhs->delete();
 
-    Session::flash('message', 'Mahasiswa ' . $mhs->nama . ' Succesfully DELETED!');
-    return redirect()->route('mahasiswa');
-}
+        Session::flash('message', 'Mahasiswa ' . $mhs->nama . ' Succesfully DELETED!');
+        return redirect()->route('mahasiswa');
+   }
 }

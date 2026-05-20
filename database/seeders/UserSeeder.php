@@ -7,6 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema; 
 
 class UserSeeder extends Seeder
 {
@@ -15,19 +16,17 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-         DB::table('users')-> truncate();
-          User::factory()
-    ->count(5)
-    ->create();
-        //  DB::table('users')->insert([
-        //     'name' => 'admin',
-        //     'email' => 'admin@gmail.com',
-        //     'password' => Hash::make('123'),
-        // ]);
-        //  DB::table('users')->insert([
-        //     'name' => 'user1',
-        //     'email' => 'user1@gmail.com',
-        //     'password' => Hash::make('123'),
-        // ]);
+        
+        Schema::disableForeignKeyConstraints();
+
+        DB::table('users')->truncate();
+
+       
+        Schema::enableForeignKeyConstraints();
+
+        User::factory()
+            ->count(5)
+            ->create();
+     
     }
 }

@@ -2,35 +2,29 @@
 
 namespace Database\Seeders;
 
-use App\Models\Blog;
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Faker\Factory as Faker;
 
 class BlogSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-    DB::table('blogs')-> truncate();
+        Schema::disableForeignKeyConstraints();
+        DB::table('blogs')->truncate();
+        Schema::enableForeignKeyConstraints();
 
-    Blog::factory()
-    ->count(30)
-    ->create();
-    //   DB::table('blogs')->insert([
-    //         'title' => 'blog 2',
-    //         'description' => 'ini adalah description 2',
-    //     ]);
-    //    DB::table('blogs')->insert([
-    //         'title' => 'blog 3',
-    //         'description' => 'ini adalah description 3',
-    //     ]);
-    //    DB::table('blogs')->insert([
-    //         'title' => 'blog 4',
-    //         'description' => 'ini adalah description 4',
-    //     ]);
+        $faker = Faker::create('id_ID');
+
+        for ($i = 1; $i <= 100; $i++) {
+            DB::table('blogs')->insert([
+           
+                'title' => $faker->unique()->sentence(6), 
+                'description' => $faker->paragraph(),
+                'created_at' => now(), 
+                'updated_at' => now()
+            ]);
+        }
     }
 }
