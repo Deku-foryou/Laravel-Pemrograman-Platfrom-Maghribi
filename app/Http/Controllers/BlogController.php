@@ -59,7 +59,7 @@ class BlogController extends Controller
 
     function delete($id)
     {
-        // $blog = DB::table('blogs')->where('id', $id)->delete();
+       
         $blogs = blog::findOrFail($id);
         $blogs->delete();
         Session()->flash('message', $blogs->title . ' Blog Succesfully DELETED!');

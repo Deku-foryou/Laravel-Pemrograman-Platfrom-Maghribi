@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Karyawan; // Import Model
+use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
